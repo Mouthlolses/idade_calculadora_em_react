@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [birthDate, setBirthDate] = useState('');
+  const [age, setAge] = useState(null);
+
+  const calculateAge = () => {
+    if (!birthDate) return;
+
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let calculatedAge = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    // Ajustar se o aniversário ainda não aconteceu este ano
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      calculatedAge--;
+    }
+
+    setAge(calculatedAge);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>Calculadora de Idade</h1>
+      <input
+        type="date"
+        value={birthDate}
+        onChange={(e) => setBirthDate(e.target.value)}
+      />
+      <button onClick={calculateAge}>Calcular Idade</button>
+      {age !== null && (
+        <h2>Sua idade é: {age} anos</h2>
+      )}
     </div>
   );
-}
+};
 
 export default App;
